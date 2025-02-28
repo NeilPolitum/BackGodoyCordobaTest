@@ -1,18 +1,27 @@
+using Microsoft.Extensions.Options;
+using UserApi.Models;
+using UserApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.Configure<MongoDBSettings>(
+    builder.Configuration.GetSection(nameof(MongoDBSettings)));
+
+builder.Services.AddSingleton(sp =>
+    sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
+
+builder.Services.AddSingleton<UserService>();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
 app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 var summaries = new[]
 {
