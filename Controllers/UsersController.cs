@@ -23,7 +23,7 @@ namespace UserApi.Controllers {
         }
 
         [HttpGet("{id:length(24)}", Name = "GetUser")]
-        public async Task<ActionResult<User>> Get(string id) {
+        public async Task<IActionResult> Get(string id) {
             try {
                 var user = await _userService.GetAsync(id);
                 if (user == null) {
