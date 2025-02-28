@@ -37,5 +37,8 @@ namespace UserApi.Services {
 
         public async Task RemoveAsync(string id) =>
             await _users.DeleteOneAsync(user => user.Id == id);
+
+        public async Task<User> GetByEmailAsync(string email) =>
+            await _users.Find<User>(user => user.CorreoElectronico == email).FirstOrDefaultAsync();
     }
 }

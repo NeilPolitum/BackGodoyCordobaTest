@@ -24,6 +24,10 @@ namespace UserApi.Models {
         [Required(ErrorMessage = "El campo Correo es requerido.")]
         public required string CorreoElectronico { get; set; }
 
+        [BsonElement("Password")]
+        [Required(ErrorMessage = "El campo Contraseña es requerido.")]
+        public required string Password { get; set; }
+
         [BsonElement("FechaUltimoAcceso")]
         public DateTime FechaUltimoAcceso { get; set; }
     }

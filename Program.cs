@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using UserApi.Models;
 using UserApi.Services;
 
@@ -11,6 +14,28 @@ builder.Services.AddSingleton(sp =>
     sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
 
 builder.Services.AddSingleton<UserService>();
+
+var key = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(key)) {
+    throw new ArgumentNullException("Jwt:Key", "La clave JWT no puede ser nula o vacía.");
+}
+var keyBytes = Encoding.ASCII.GetBytes(key);
+
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options => {
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero
+    };
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -29,6 +54,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
