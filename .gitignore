@@ -1,0 +1,6 @@
+# Ignorar directorios bin y obj
+/bin
+/obj
+/debug
+
+appsettings.Development.json
