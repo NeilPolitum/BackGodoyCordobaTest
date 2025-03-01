@@ -30,6 +30,7 @@ namespace UserApi.Services {
                 .Set(user => user.Apellidos, userIn.Apellidos)
                 .Set(user => user.Cedula, userIn.Cedula)
                 .Set(user => user.CorreoElectronico, userIn.CorreoElectronico)
+                .Set(user => user.Password, userIn.Password)
                 .Set(user => user.FechaUltimoAcceso, userIn.FechaUltimoAcceso);
 
             await _users.UpdateOneAsync(filter, update);

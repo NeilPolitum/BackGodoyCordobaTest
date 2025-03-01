@@ -15,6 +15,15 @@ builder.Services.AddSingleton(sp =>
 
 builder.Services.AddSingleton<UserService>();
 
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .WithOrigins("http://127.0.0.1:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
 var key = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrEmpty(key)) {
     throw new ArgumentNullException("Jwt:Key", "La clave JWT no puede ser nula o vacía.");
@@ -53,6 +62,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowSpecificOrigin"); 
 
 app.UseAuthentication();
 app.UseAuthorization();
