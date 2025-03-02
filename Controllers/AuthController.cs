@@ -29,6 +29,8 @@ namespace UserApi.Controllers {
                 return StatusCode(500, new { message = "El usuario no tiene un Id válido." });
             }
 
+            await _userService.UpdateLastAccessAsync(user.Id);
+
             var token = GenerateJwtToken(user);
             return Ok(new { token });
         }

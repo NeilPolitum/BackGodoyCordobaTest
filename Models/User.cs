@@ -30,5 +30,8 @@ namespace UserApi.Models {
 
         [BsonElement("FechaUltimoAcceso")]
         public DateTime FechaUltimoAcceso { get; set; }
+
+        [BsonElement("Puntaje")]
+        public int Puntaje { get; set; }
     }
 }
